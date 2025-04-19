@@ -19,28 +19,28 @@ import pfe.quiz.service.ExamService;
 
 @RestController
 @CrossOrigin(origins = "*")  
-@RequestMapping
+@RequestMapping("/exams")
 public class ExamController {
 @Autowired ExamService examService;
 	
 
-	@GetMapping("exams")
+	@GetMapping
 	public List<Exam> getAllExams(){
 		return examService.getAllExams();
 		
 	}
 	
-	@PostMapping("exams")
+	@PostMapping
 	public Exam addExam(@RequestBody Exam exam){
 		return examService.addExam(exam);
 		
 	}
-	@GetMapping("exams/{id}")
+	@GetMapping("/{id}")
 	public Optional<Exam> getExamById (@PathVariable Long id){
 		return examService.getExamById(id);
 		
 	}
-	@DeleteMapping("exams/{id}")
+	@DeleteMapping("/{id}")
 	public void deleteAllExamById (@PathVariable Long id){
 		 examService.deleteExamById(id);
 	}
@@ -55,9 +55,5 @@ public class ExamController {
     public Question addQuestionToExam(@RequestBody Question question,@PathVariable Long idExam) {
     return examService.addQuestionToExam(question,idExam);
    }
-    
-  
-    
-  
     
 }

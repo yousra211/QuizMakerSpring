@@ -5,7 +5,9 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 
@@ -14,7 +16,7 @@ import pfe.quiz.Repository.CreatorRepository;
 import pfe.quiz.model.Creator;
 
 @Service
-public class CreatorService  {
+public class CreatorService implements UserDetailsService {
 
 //	SignupRequest signupRequest = new SignupRequest();
   
@@ -40,8 +42,15 @@ public class CreatorService  {
 	public Creator updateCreator(Creator creator) {
 		return creatorRepository.save(creator);
 	} 
-/*
+
 	@Override
+	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+	        return creatorRepository.findByUsername(username); 
+	    }
+	
+	/*
+	  
+	   @Override
 	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 		
 	    Creator creator = creatorRepository.findByEmail(email)
@@ -49,6 +58,7 @@ public class CreatorService  {
 	        
 	        return creator; 
 	    }
+	   
 	   public boolean existsByEmail(String email) {
 	        return creatorRepository.findByEmail(email).isPresent();
 	    }
@@ -93,7 +103,7 @@ public Creator registerNewCreator(Creator creator, PasswordEncoder passwordEncod
     public Creator registerNewCreator(Creator creator) {
         creator.setRoles("ROLE_CREATOR");
         creator.setActive(true);
-        creator.setPhotoUrl("http://localhost:8080/photos/default.png"); // par défaut
+        creator.setPhotoUrl("/QuizMaker/src/main/java/photos/WhatsApp Image 2025-04-18 at 14.13.04.jpeg");
         return creatorRepository.save(creator);
     }
 

@@ -27,8 +27,16 @@ public class ExamService {
 	}
 
 	public Exam addExam(Exam exam) {
+		try {
 		return examRepository.save(exam);
-	}
+		}catch (Exception e) {
+			 System.err.println("Erreur lors de l'enregistrement de l'examen : " + e.getMessage());
+		        e.printStackTrace(); // pour afficher la stack trace complète
+		        return null;
+		}
+		
+		
+		}
 	
 	public Optional<Exam> getExamById(Long id) {
 		return examRepository.findById(id);

@@ -1,4 +1,4 @@
-/*
+
 package pfe.quiz.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,6 +50,25 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(auth -> 
+        auth.requestMatchers("/home/**").permitAll()
+        .requestMatchers("/auth/**").permitAll()
+        .requestMatchers("/creators/**").permitAll()
+        .requestMatchers("/questions/**").hasRole("CREATOR")
+        .requestMatchers("/exams/**").permitAll()
+        .anyRequest().authenticated()
+        )
+        .csrf(csrf -> csrf.disable())
+        .cors(withDefaults())
+        .formLogin(form -> form.disable()) // Désactiver le formulaire de connexion par défaut
+        .httpBasic(withDefaults());
+        
+        return http.build();
+    }
+    /*
+    
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http.authorizeHttpRequests(auth -> 
         auth.requestMatchers(AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/creators")).permitAll()
         .requestMatchers(AntPathRequestMatcher.antMatcher("/home/**")).permitAll()
         .requestMatchers(AntPathRequestMatcher.antMatcher("/auth/**")).permitAll()
@@ -84,7 +103,6 @@ public class SecurityConfig {
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
-   
+   */
     
 }
-*/

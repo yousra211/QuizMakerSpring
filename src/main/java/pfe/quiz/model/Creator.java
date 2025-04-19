@@ -1,11 +1,14 @@
 package pfe.quiz.model;
 
+import java.nio.file.attribute.UserDefinedFileAttributeView;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
-
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -20,7 +23,7 @@ import lombok.NoArgsConstructor;
 
 @AllArgsConstructor @NoArgsConstructor @Data
 @Entity
-public class Creator  {
+public class Creator implements UserDetails {
 
 	@Id
 	   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -45,7 +48,7 @@ public class Creator  {
 	    return this.roles;
 	}
 
-	/*
+	
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		List<GrantedAuthority> authorities=new ArrayList<>();
@@ -79,6 +82,6 @@ public class Creator  {
 	public String getUsername() {
 	    return email; // Utiliser l'email comme identifiant
 	}
-	*/
+	
 }
 

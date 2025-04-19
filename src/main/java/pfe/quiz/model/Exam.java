@@ -3,6 +3,7 @@ package pfe.quiz.model;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import jakarta.persistence.Entity;
@@ -27,10 +28,13 @@ public class Exam {
 	Long id;
 	String title;
 	String description;
-	float passingScore;
+	float duration;
+	String uniqueLink;
+
 	@ManyToOne
-	  @JoinColumn(name = "creator_id")
+	  @JoinColumn(name = "creator_id", nullable = true)
 	Creator creator;
+	@JsonIgnore
 	@OneToMany(mappedBy= "exam")
 	  List<Question> question;
 
