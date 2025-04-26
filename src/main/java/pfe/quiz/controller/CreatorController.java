@@ -11,6 +11,7 @@ import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -102,14 +103,15 @@ public class CreatorController {
 	
 	//get all Exam by creator
 	@GetMapping("exams/creator")
-		public List<Exam> getAllExamByCreator(@PathVariable String nameCreator){
-		return examService.getAllExamByCreator(nameCreator);
+		public List<Exam> getExamsByCreator(@PathVariable Long id){
+		return examService.getExamsByCreator(id);
 		}
 			
 			
-	@PostMapping("creator/{nameCreator}/exam")
-	    public Exam addExamToCreator(@PathVariable String nameCreator, @RequestBody Exam exam){
-		return examService.addExamToCreator(nameCreator,exam);
+	@PostMapping("creator/{id}/exam")
+	    public Exam addExamToCreator( Authentication authentication, @RequestBody Exam exam){
+		 Creator creator = (Creator) authentication.getPrincipal();
+		return examService.addExamToCreator(creator.getId(),exam);
 		}
 
 

@@ -5,8 +5,10 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import pfe.quiz.model.Answer;
+import pfe.quiz.model.Creator;
 import pfe.quiz.model.Exam;
 import pfe.quiz.model.Question;
 import pfe.quiz.Repository.ExamRepository;
@@ -47,14 +49,18 @@ public class ExamService {
 		
 	}
 
-	public List<Exam> getAllExamByCreator(String userNameCreator) {
-		return examRepository.findByCreator_Username(userNameCreator);
-	}
+	public List<Exam> getExamsByCreator(@PathVariable Long id) {
+	    Creator creator = creatorRepository.findCreatorById(id);
+	    return examRepository.findByCreator(creator);
+	    }
 
-	public Exam addExamToCreator(String username, Exam exam) {
-		exam.setCreator(creatorRepository.findCreatorByUsername(username));
-		examRepository.save(exam);
-		return exam;
+	public Exam addExamToCreator(Long id, Exam exam) {
+	    Creator creator = creatorRepository.findCreatorById(id);
+	    if (creator == null) {
+	        throw new RuntimeException("Creator not found with id: " + id);
+	    }
+	    exam.setCreator(creator);
+	    return examRepository.save(exam);
 	}
 		
 	 public List<Question>getAllQuestionsByExam(Long idExam) {

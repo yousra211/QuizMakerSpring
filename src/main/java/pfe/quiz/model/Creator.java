@@ -13,6 +13,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -31,16 +32,21 @@ public class Creator implements UserDetails {
 	String fullname;
 	String username;
 	String email ;
-	@JsonIgnore
 	String password;
 	 String photoUrl;
 	 boolean active;
 	 String roles;
 	
-	@OneToMany(mappedBy = "creator")
+	@OneToMany(mappedBy = "creator", fetch = FetchType.EAGER)
 	@JsonIgnore
 	List<Exam> exams;
 
+	
+	public String getPassword() {
+	    return password;
+	}
+
+	
 	public List<String> getRoles(){
 		return Arrays.asList(roles.split(","));
 	}
@@ -80,7 +86,7 @@ public class Creator implements UserDetails {
 	// Pour compatibilité avec UserDetails
 	@Override
 	public String getUsername() {
-	    return email; // Utiliser l'email comme identifiant
+	    return this.email; // Utiliser l'email comme identifiant
 	}
 	
 }

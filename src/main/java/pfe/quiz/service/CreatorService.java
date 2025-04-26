@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 
@@ -21,6 +22,9 @@ public class CreatorService implements UserDetailsService {
 //	SignupRequest signupRequest = new SignupRequest();
   
 @Autowired CreatorRepository creatorRepository;
+
+@Autowired
+private PasswordEncoder passwordEncoder;
 
 	public List<Creator>getAllCreators(){
 		return creatorRepository.findAll();
@@ -48,48 +52,7 @@ public class CreatorService implements UserDetailsService {
 	        return creatorRepository.findByUsername(username); 
 	    }
 	
-	/*
-	  
-	   @Override
-	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-		
-	    Creator creator = creatorRepository.findByEmail(email)
-	            .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));
-	        
-	        return creator; 
-	    }
-	   
-	   public boolean existsByEmail(String email) {
-	        return creatorRepository.findByEmail(email).isPresent();
-	    }
-
-public Creator registerNewCreator(Creator creator, PasswordEncoder passwordEncoder) {
-    creator.setPassword(passwordEncoder.encode(creator.getPassword()));
-    creator.setRoles("ROLE_CREATOR");
-    creator.setActive(true);
-    creator.setPhotoUrl("http://localhost:8080/photos/default.png"); // par défaut
-    return creatorRepository.save(creator);
-}
-}
-	/*
-	  public Creator registerCreator(SignupRequest signupRequest) {
-	        // Vérifier si l'email existe déjà
-	        if (creatorRepository.existsByEmail(signupRequest.getEmail())) {
-	            throw new RuntimeException("Email déjà utilisé");
-	        
-	        }
-	 // Créer un nouveau creator
-    Creator creator = new Creator();
-    creator.setFullname(signupRequest.getFullname());
-    creator.setEmail(signupRequest.getEmail());
-    creator.setPassword(signupRequest.getPassword()); 
-    
-
-    return creatorRepository.save(creator);
-	        }
-    
-    
-    */
+	
  // vérifier si un email existe déjà
     public boolean existsByEmail(String email) {
         return creatorRepository.findByEmail(email).isPresent();
@@ -102,6 +65,8 @@ public Creator registerNewCreator(Creator creator, PasswordEncoder passwordEncod
 	
     public Creator registerNewCreator(Creator creator) {
         creator.setRoles("ROLE_CREATOR");
+        String encodedPassword = passwordEncoder.encode(creator.getPassword());
+        creator.setPassword(encodedPassword);
         creator.setActive(true);
         creator.setPhotoUrl("/QuizMaker/src/main/java/photos/WhatsApp Image 2025-04-18 at 14.13.04.jpeg");
         return creatorRepository.save(creator);

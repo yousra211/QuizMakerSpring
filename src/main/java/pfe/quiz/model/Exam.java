@@ -32,7 +32,7 @@ public class Exam {
 	String uniqueLink;
 
 	@ManyToOne
-	  @JoinColumn(name = "creator_id", nullable = true)
+	  @JoinColumn(name = "creator_id")
 	Creator creator;
 	@JsonIgnore
 	@OneToMany(mappedBy= "exam")

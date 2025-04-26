@@ -5,8 +5,13 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,63 +25,35 @@ import pfe.quiz.service.CreatorService;
 @RequestMapping("/auth")
 @CrossOrigin(origins = "*")
 public class AuthController {
-   /*
-	  @Autowired
-	    private AuthenticationManager authenticationManager;
-	    
-	    
+    
 	      @Autowired
 	    private PasswordEncoder passwordEncoder;
-	    */
-	    
+	   
 	    @Autowired
 	    private CreatorService creatorService;
 	    
-	  
+	 
+	        @GetMapping("/auth/currentUser")
+	        public Creator getCurrentUser(Authentication authentication) {
+	            if (authentication != null) {
+	                return (Creator) authentication.getPrincipal();
+	            }
+	            return null;
+	        }
 
-	    // Définition du record pour la requête de login (interne au contrôleur)
-	    public record LoginRequest(String email, String password) {}
 
-	    // Définition du record pour la requête d'inscription
-	    public record RegisterRequest(
-	        String fullname,
-	        String username,
-	        String email,
-	        String password
-	    ) {}
-/*
-	    // ========== LOGIN ==========
 	    @PostMapping("/login")
 	    public ResponseEntity<?> login(@RequestBody LoginRequest request) {
-	        try {
-	            Authentication authentication = authenticationManager.authenticate(
-	                new UsernamePasswordAuthenticationToken(
-	                    request.email(),
-	                    request.password()
-	                )
-	            );
-	            
-	            SecurityContextHolder.getContext().setAuthentication(authentication);
-	            Creator creator = (Creator) authentication.getPrincipal();
-	            
-	            // Retourne uniquement les données nécessaires (évite @JsonIgnore)
-	            return ResponseEntity.ok(new Object() {
-	                public Long id = creator.getId();
-	                public String fullname = creator.getFullname();
-	                public String username = creator.getUsername();
-	                public String email = creator.getEmail();
-	                public String photoUrl = creator.getPhotoUrl();
-	                public String roles = creator.getRolesString();
-	            });
-	        } catch (BadCredentialsException e) {
-	            return ResponseEntity.status(401).body("Email ou mot de passe incorrect");
-	        } catch (Exception e) {
-	            return ResponseEntity.status(500).body("Erreur lors de la connexion: " + e.getMessage());
-	        }
-	    }
-*/
+	    	Creator creator = creatorService.findByEmail(request.getEmail()).orElse(null);
 
-	    // ========== REGISTER ========
+	        if (creator == null || !passwordEncoder.matches(request.getPassword(), creator.getPassword())) {
+	            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Email ou mot de passe invalide");
+	        }
+	        return ResponseEntity.ok(creator); // ou un DTO contenant seulement id, email, nom...
+	    }
+
+	    
+	    //signup
 	    @PostMapping("/register")
 	    public ResponseEntity<?> register(@RequestBody Creator creator) {
 	        if (creatorService.existsByEmail(creator.getEmail())) {
@@ -88,3 +65,4 @@ public class AuthController {
 	        return ResponseEntity.ok(savedCreator); 
 	    }
 	}
+

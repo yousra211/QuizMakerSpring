@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import pfe.quiz.model.Answer;
+import pfe.quiz.model.Creator;
 import pfe.quiz.model.Exam;
 import pfe.quiz.model.Question;
 
@@ -15,7 +16,7 @@ import pfe.quiz.model.Question;
 public interface ExamRepository extends JpaRepository<Exam, Long>{
 	
 
-	 List<Exam> findByCreator_Username(String username);
+	 List<Exam> findExamsByCreatorUsername(String username);
 
 	 @Query("SELECT q FROM Exam e JOIN e.question q WHERE e.id = :idExam")
 	    List<Question> findAllQuestionsByExamId(@Param("idExam") Long idExam);
@@ -23,4 +24,6 @@ public interface ExamRepository extends JpaRepository<Exam, Long>{
 	    // Méthode pour trouver les réponses (à adapter selon votre modèle)
 	    @Query("SELECT a FROM Exam e JOIN e.question q JOIN q.answers a WHERE e.id = :idExam")
 	    List<Answer> findAllAnswersByExamId(@Param("idExam") Long idExam);
+
+		List<Exam> findByCreator(Creator creator);
 	}
