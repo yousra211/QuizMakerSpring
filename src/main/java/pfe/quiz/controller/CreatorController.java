@@ -95,12 +95,16 @@ public class CreatorController {
 	return !creatorRepository.existsById(id);
 }
 	
-	@PutMapping ("creators")
-	
-	public Creator updateCreator(@RequestBody Creator creator) {
-		return creatorService.updateCreator(creator);
+	@PutMapping ("creators/{id}")
+	public ResponseEntity<Creator> updateCreator(@PathVariable Long id, @RequestBody Creator creator) {
+	    Creator updated = creatorService.updateCreator(id, creator);
+	    return ResponseEntity.ok(updated);
 	}
-	
+	/*
+	public Creator updateCreator(@PathVariable Long id ,@RequestBody Creator creator) {
+		return creatorService.updateCreator(id , creator);
+	}
+	*/
 	//get all Exam by creator
 	@GetMapping("exams/creator")
 		public List<Exam> getExamsByCreator(@PathVariable Long id){

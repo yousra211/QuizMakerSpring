@@ -4,8 +4,10 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.server.ResponseStatusException;
 
 import pfe.quiz.model.Answer;
 import pfe.quiz.model.Creator;
@@ -68,11 +70,16 @@ public class ExamService {
 		  }
 		  
 	
-	public Question addQuestionToExam (Question question , Long idExam) {
-		Optional<Exam> exam=examRepository.findById(idExam);
-		question.setExam(exam.get());
-		return questionRepository.save(question);
-	}
+	 public Question addQuestionToExam(Question question, Long examId) {
+		    Optional<Exam> examOptional = examRepository.findById(examId);
+		    if (!examOptional.isPresent()) {
+		        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Examen non trouvé");
+		    }
+		    
+		 Exam exam = examOptional.get();
+		    question.setExam(exam);
+		    return questionRepository.save(question);
+		}
 
 	
 	

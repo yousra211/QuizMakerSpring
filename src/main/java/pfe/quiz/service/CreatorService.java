@@ -11,8 +11,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-
-
+import jakarta.persistence.EntityNotFoundException;
 import pfe.quiz.Repository.CreatorRepository;
 import pfe.quiz.model.Creator;
 
@@ -42,11 +41,25 @@ private PasswordEncoder passwordEncoder;
 		creatorRepository.deleteById(id);
 	
 	}
-
+/*
 	public Creator updateCreator(Creator creator) {
 		return creatorRepository.save(creator);
 	} 
 
+*/
+	 public Creator updateCreator(Long id, Creator newData) {
+	        return creatorRepository.findById(id)
+	            .map(existing -> {
+	                existing.setFullname(newData.getFullname());
+	                existing.setUsername(newData.getUsername());
+	                existing.setEmail(newData.getEmail());
+	                // Ne pas modifier le mot de passe ici sauf si intentionnel
+	                return creatorRepository.save(existing);
+	            })
+	            .orElseThrow(() -> new EntityNotFoundException("Creator with ID " + id + " not found"));
+	    }
+	
+	
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 	        return creatorRepository.findByUsername(username); 

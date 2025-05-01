@@ -1,9 +1,10 @@
 package pfe.quiz.model;
 
-import java.nio.file.attribute.UserDefinedFileAttributeView;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import org.springframework.security.core.GrantedAuthority;
@@ -47,9 +48,10 @@ public class Creator implements UserDetails {
 	}
 
 	
-	public List<String> getRoles(){
-		return Arrays.asList(roles.split(","));
+	public List<String> getRoles() {
+	    return roles != null ? Arrays.asList(roles.split(",")) : Collections.emptyList();
 	}
+
 	public String getRolesString() {
 	    return this.roles;
 	}
@@ -86,8 +88,21 @@ public class Creator implements UserDetails {
 	// Pour compatibilité avec UserDetails
 	@Override
 	public String getUsername() {
-	    return this.email; // Utiliser l'email comme identifiant
+	    return this.username; // Utiliser l'email comme identifiant
 	}
 	
+	@Override
+	public String toString() {
+	    return "Creator{" +
+	           "id=" + id +
+	           ", fullname='" + fullname + '\'' +
+	           ", username='" + username + '\'' +
+	           ", email='" + email + '\'' +
+	           
+	           ", photoUrl='" + photoUrl + '\'' +
+	           ", active=" + active +
+	           ", roles='" + roles + '\'' +
+	           '}';
+	}
 }
 

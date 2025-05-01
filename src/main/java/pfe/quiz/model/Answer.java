@@ -22,7 +22,7 @@ public class Answer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 	Long id;
 	String content;
-	int timer;
+	boolean isCorrect;
 	@ManyToOne
 	@JoinColumn(name = "question_id")  
 	Question question;

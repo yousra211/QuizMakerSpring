@@ -55,7 +55,7 @@ public class SecurityConfig {
         http.authorizeHttpRequests(auth -> 
         auth.requestMatchers("/home/**").permitAll()
         .requestMatchers("/auth/**").permitAll()
-        .requestMatchers("/creators/**").permitAll()
+        .requestMatchers("/creators/**").hasRole("CREATOR")
         .requestMatchers("/creator/**").hasRole("CREATOR")
         .requestMatchers("/questions/**").hasRole("CREATOR")
         .requestMatchers("/exams/**").hasRole("CREATOR")

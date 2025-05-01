@@ -49,7 +49,8 @@ public class AuthController {
 	        if (creator == null || !passwordEncoder.matches(request.getPassword(), creator.getPassword())) {
 	            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Email ou mot de passe invalide");
 	        }
-	        return ResponseEntity.ok(creator); // ou un DTO contenant seulement id, email, nom...
+	        creator.setUsername(creator.getUsername());
+	        return ResponseEntity.ok(creator); 
 	    }
 
 	    

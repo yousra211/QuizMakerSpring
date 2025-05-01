@@ -1,7 +1,9 @@
 package pfe.quiz.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -22,9 +24,12 @@ public class Question {
 	 @GeneratedValue(strategy = GenerationType.IDENTITY)
 	Long id;
 	String text;
-	@OneToMany(mappedBy = "question")
-	
-	List<Answer> answers;
+	String type; // "directe" ou "QCM"
+	String response; 
+	private Integer grade;
+	 @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, orphanRemoval = true)
+	    private List<Answer> answers = new ArrayList<>();
+
 	  @ManyToOne
 	  @JoinColumn(name = "exam_id")
 	    Exam exam;

@@ -38,4 +38,14 @@ public class Exam {
 	@OneToMany(mappedBy= "exam")
 	  List<Question> question;
 
+	@Override
+	public String toString() {
+	    return "Exam{" +
+	           "id=" + id +
+	           ", title='" + title + '\'' +
+	           ", description='" + description + '\'' +
+	           ", duration=" + duration +
+	           ", uniqueLink='" + uniqueLink + '\'' +
+	           '}';
+	}
 }
