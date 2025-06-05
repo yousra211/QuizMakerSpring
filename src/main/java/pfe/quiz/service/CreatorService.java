@@ -46,20 +46,41 @@ private PasswordEncoder passwordEncoder;
 		return creatorRepository.save(creator);
 	} 
 
-*/
-	 public Creator updateCreator(Long id, Creator newData) {
-	        return creatorRepository.findById(id)
-	            .map(existing -> {
-	                existing.setFullname(newData.getFullname());
-	                existing.setUsername(newData.getUsername());
-	                existing.setEmail(newData.getEmail());
-	                // Ne pas modifier le mot de passe ici sauf si intentionnel
-	                return creatorRepository.save(existing);
-	            })
-	            .orElseThrow(() -> new EntityNotFoundException("Creator with ID " + id + " not found"));
+*/public Creator updateCreatorWithImage(Long id, String fullname, String username, String email, String photoUrl) {
+    Creator existingCreator = creatorRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Creator not found with id: " + id));
+
+        existingCreator.setFullname(fullname);
+        existingCreator.setUsername(username);
+        existingCreator.setEmail(email);
+        existingCreator.setPhotoUrl(photoUrl); // Màj image
+
+        return creatorRepository.save(existingCreator);
+    }
+
+	
+	public Creator updateCreator(Long id, Creator creator) {
+	    Optional<Creator> existingCreatorOpt = getCreatorById(id);
+	    
+	    if (existingCreatorOpt.isPresent()) {
+	        Creator existingCreator = existingCreatorOpt.get();
+	        
+	        existingCreator.setFullname(creator.getFullname());
+	        existingCreator.setUsername(creator.getUsername());
+	        existingCreator.setEmail(creator.getEmail());
+	        
+	        // Vérifier si une nouvelle URL d'image est fournie
+	        if (creator.getPhotoUrl() != null && !creator.getPhotoUrl().isEmpty()) {
+	            existingCreator.setPhotoUrl(creator.getPhotoUrl());
+	        }
+	        
+	        // Autres champs à mettre à jour si nécessaire...
+	        
+	        return creatorRepository.save(existingCreator);
+	    } else {
+	        throw new RuntimeException("Creator not found with id: " + id);
 	    }
-	
-	
+	}
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 	        return creatorRepository.findByUsername(username); 
@@ -81,7 +102,7 @@ private PasswordEncoder passwordEncoder;
         String encodedPassword = passwordEncoder.encode(creator.getPassword());
         creator.setPassword(encodedPassword);
         creator.setActive(true);
-        creator.setPhotoUrl("/QuizMaker/src/main/java/photos/WhatsApp Image 2025-04-18 at 14.13.04.jpeg");
+       
         return creatorRepository.save(creator);
     }
 

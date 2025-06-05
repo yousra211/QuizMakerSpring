@@ -2,7 +2,9 @@ package pfe.quiz.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,23 +40,13 @@ public class CreatorController {
 	@Autowired ExamService examService;
 	@Autowired CreatorRepository creatorRepository;
 	
+	
 	@GetMapping ("creators")
 	public List<Creator>getAllCreators(){
 		return creatorService.getAllCreators();
 	}
 	
-	@GetMapping("photos/{id}")
-	public ResponseEntity<Resource> getImage(@PathVariable String id ){
-		String path="src/main/resources/static/photos/"+id+".png";
-		FileSystemResource file =new FileSystemResource (path);
-		if (!file.exists()) {
-			return ResponseEntity.notFound().build();
-		
-		}
-		return ResponseEntity.ok()
-				.contentType(MediaType.IMAGE_PNG)
-				.body(file);
-	}
+	
 	/*
 	@PostMapping("creators")
 	public Creator addCreator(@RequestBody Creator creator) {
@@ -100,6 +92,34 @@ public class CreatorController {
 	    Creator updated = creatorService.updateCreator(id, creator);
 	    return ResponseEntity.ok(updated);
 	}
+	// Ajoutez cette méthode à votre contrôleur existant
+
+	@PutMapping("creators/{id}/image")
+	public ResponseEntity<Creator> updateCreatorWithImage(
+	    @PathVariable Long id,
+	    @RequestParam String fullname,
+	    @RequestParam String username,
+	    @RequestParam String email,
+	    @RequestParam MultipartFile file) throws IOException {
+
+		 // Gestion de l'extension
+	    String extension = ".jpg"; // valeur par défaut
+	    if (file != null && !file.isEmpty() && file.getOriginalFilename() != null) {
+	        String originalFilename = file.getOriginalFilename();
+	        extension = originalFilename.substring(originalFilename.lastIndexOf("."));
+	    }
+
+	    String filename = id + extension;
+	    Path imagePath = Paths.get("src/main/resources/static/photos/", filename);
+	    Files.createDirectories(imagePath.getParent());
+	    Files.write(imagePath, file.getBytes());
+
+	    // Appelle le service avec les nouveaux champs + nom de l'image
+	    Creator updated = creatorService.updateCreatorWithImage(id, fullname, username, email, "/photos/" + filename);
+
+	    return ResponseEntity.ok(updated);
+	}
+
 	/*
 	public Creator updateCreator(@PathVariable Long id ,@RequestBody Creator creator) {
 		return creatorService.updateCreator(id , creator);
@@ -134,5 +154,4 @@ return !creatorRepository.existsById(id);
 
 }
 */}
-
 
