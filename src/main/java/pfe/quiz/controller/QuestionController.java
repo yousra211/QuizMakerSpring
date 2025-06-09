@@ -39,7 +39,7 @@ public class QuestionController {
 		public void deleteQuestionById(@PathVariable Long id) {
 		questionService.deleteQuestionById(id);
 		}
-	
+	/*
 	 @GetMapping ("answers/{idQuestion}")
 	 public List<Answer>getAllAnswersByQuestion(@PathVariable Long idQuestion){
       return questionService.getAllAnswersByQuestion(idQuestion);
@@ -50,5 +50,5 @@ public class QuestionController {
     public Answer addAnswerToQuestion(@RequestBody Answer answer,@PathVariable Long idQuestion) {
     return questionService.addAnswerToQuestion(answer,idQuestion);
    }
-    
+    */
 }

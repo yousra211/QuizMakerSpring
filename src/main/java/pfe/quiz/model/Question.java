@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -22,16 +24,30 @@ import lombok.NoArgsConstructor;
 public class Question {
 	@Id
 	 @GeneratedValue(strategy = GenerationType.IDENTITY)
-	Long id;
-	String text;
-	String type; // "directe" ou "QCM"
-	String response; 
-	private Integer grade;
-	 @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, orphanRemoval = true)
-	    private List<Answer> answers = new ArrayList<>();
-
-	  @ManyToOne
-	  @JoinColumn(name = "exam_id")
-	    Exam exam;
-
+private Long id;
+    
+    @Column(name = "text", nullable = false, length = 1000)
+    private String text;
+    
+    @Column(name = "type", nullable = false)
+    private String type; // "directe" ou "QCM"
+    
+    @Column(name = "response", length = 500)
+    private String response; // pour stocker la bonne réponse pour une question directe
+    
+    @Column(name = "options", columnDefinition = "TEXT")
+    private String options; // Stockage JSON des options pour les QCM
+    
+    @Column(name = "grade", nullable = false)
+    private Integer grade;
+    
+  
+    /*
+    @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<Answer> answers = new ArrayList<>();
+    */
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "exam_id")
+    private Exam exam;
 }

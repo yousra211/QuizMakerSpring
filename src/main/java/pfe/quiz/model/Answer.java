@@ -21,11 +21,13 @@ public class Answer {
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 	Long id;
-	String content;
+	String text;
 	boolean isCorrect;
+	/*
 	@ManyToOne
 	@JoinColumn(name = "question_id")  
 	Question question;
+	*/
 	@ManyToMany
 	List<Participant> participants;
 } 

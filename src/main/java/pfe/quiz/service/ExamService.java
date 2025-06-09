@@ -1,5 +1,6 @@
 package pfe.quiz.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -45,6 +46,10 @@ public class ExamService {
 	public Optional<Exam> getExamById(Long id) {
 		return examRepository.findById(id);
 	}
+	
+	public Exam updateExam( Exam exam) {
+		return examRepository.save(exam);
+	} 
 
 	public void deleteExamById(Long id) {
 		examRepository.deleteById(id);
@@ -70,17 +75,25 @@ public class ExamService {
 		  }
 		  
 	
-	 public Question addQuestionToExam(Question question, Long examId) {
-		    Optional<Exam> examOptional = examRepository.findById(examId);
-		    if (!examOptional.isPresent()) {
-		        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Examen non trouvé");
+	 public List<Question> addQuestionsToExam(Long creatorId, List<Question> questions, Long examId) {
+		    // Récupérer l'exam
+		    Exam exam = examRepository.findById(examId)
+		        .orElseThrow(() -> new RuntimeException("Exam not found with id: " + examId));
+		    
+		    // Vérifier que l'exam appartient au créateur authentifié
+		    if (!exam.getCreator().getId().equals(creatorId)) {
+		        throw new RuntimeException("Creator not authorized to modify this exam");
 		    }
 		    
-		 Exam exam = examOptional.get();
-		    question.setExam(exam);
-		    return questionRepository.save(question);
+		    // Associer chaque question à l'examen
+		    List<Question> savedQuestions = new ArrayList<>();
+		    for (Question question : questions) {
+		        question.setExam(exam);
+		        savedQuestions.add(questionRepository.save(question));
+		    }
+		    
+		    return savedQuestions;
 		}
-
 	
 	
 

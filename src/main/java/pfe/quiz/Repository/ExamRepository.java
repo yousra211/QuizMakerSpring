@@ -20,10 +20,10 @@ public interface ExamRepository extends JpaRepository<Exam, Long>{
 
 	 @Query("SELECT q FROM Exam e JOIN e.question q WHERE e.id = :idExam")
 	    List<Question> findAllQuestionsByExamId(@Param("idExam") Long idExam);
-	    
+	    /*
 	    // Méthode pour trouver les réponses (à adapter selon votre modèle)
 	    @Query("SELECT a FROM Exam e JOIN e.question q JOIN q.answers a WHERE e.id = :idExam")
 	    List<Answer> findAllAnswersByExamId(@Param("idExam") Long idExam);
-
+*/
 		List<Exam> findByCreator(Creator creator);
 	}

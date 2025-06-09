@@ -126,7 +126,7 @@ public class CreatorController {
 	}
 	*/
 	//get all Exam by creator
-	@GetMapping("exams/creator")
+	@GetMapping("creators/{id}/exams")
 		public List<Exam> getExamsByCreator(@PathVariable Long id){
 		return examService.getExamsByCreator(id);
 		}

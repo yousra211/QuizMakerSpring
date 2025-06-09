@@ -33,7 +33,7 @@ public class QuestionService {
 	public void deleteQuestionById(Long id){
 		questionRepository.deleteById(id);
 	}
-	
+	/*
 	 public List<Answer>getAllAnswersByQuestion(Long idQuestion) {
 		    return answerRepository.findAllAnswersByQuestionId(idQuestion);
 		  }
@@ -44,5 +44,5 @@ public class QuestionService {
 		answer.setQuestion(question.get());
 		return answerRepository.save(answer);
 	}
-
+*/
 }

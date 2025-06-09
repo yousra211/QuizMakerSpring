@@ -10,6 +10,6 @@ import pfe.quiz.model.Answer;
 @Repository
 public interface AnswerRepository extends JpaRepository<Answer, Long> {
 
-	List<Answer> findAllAnswersByQuestionId(Long idQuestion);
+//	List<Answer> findAllAnswersByQuestionId(Long idQuestion);
 
 }

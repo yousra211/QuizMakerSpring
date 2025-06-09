@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -46,33 +47,29 @@ public class ExamController {
 	            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Examen non trouvé"));
 	    return ResponseEntity.ok(exam);
 	}
+	@PutMapping 
+	public Exam updateExam( @RequestBody Exam exam) {
+		return examService.updateExam( exam);
+	     
+	}
+	
 	@DeleteMapping("/{id}")
 	public void deleteAllExamById (@PathVariable Long id){
 		 examService.deleteExamById(id);
 	}
 	
-	 @GetMapping ("questions/{idExam}")
+	 @GetMapping ("/{idExam}/questions")
      public List<Question>getAllQuestionsByExam(@PathVariable Long idExam){
       return examService.getAllQuestionsByExam(idExam);
      }
      
 	
 	 
-	 @PostMapping("exam/{idExam}/questions")
-	 public Question addQuestionToExam(@RequestBody Question question, 
-	                                 @PathVariable Long idExam, 
-	                                 Authentication authentication) {
+	 @PostMapping("/{id}/questions")
+	 public List<Question> addQuestionsToExam(Authentication authentication, 
+	                                         @RequestBody List<Question> questions,  // ⚠️ LIST, pas Question
+	                                         @PathVariable Long id) {
 	     Creator creator = (Creator) authentication.getPrincipal();
-	     
-	     // Récupérer l'exam en gérant l'Optional
-	     Exam exam = examService.getExamById(idExam)
-	             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Examen non trouvé"));
-	     
-	     // Vérifier les permissions
-	     if (!exam.getCreator().getId().equals(creator.getId())) {
-	         throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Vous n'êtes pas autorisé à modifier cet examen");
-	     }
-	     
-	     return examService.addQuestionToExam(question, idExam);
+	     return examService.addQuestionsToExam(creator.getId(), questions, id);
 	 }
 }
