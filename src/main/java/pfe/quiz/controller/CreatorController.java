@@ -6,6 +6,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -153,5 +154,23 @@ creatorRepository.deleteById(id);
 return !creatorRepository.existsById(id);
 
 }
-*/}
+*/
+	 @PutMapping("/creators/status")
+	 public ResponseEntity<Creator> updateCreatorStatus(@RequestBody Map<String, Object> request) {
+	     try {
+	         Long creatorId = Long.valueOf(request.get("id").toString());
+	         Boolean active = Boolean.valueOf(request.get("active").toString());
+	         
+	         Creator creator = creatorRepository.findById(creatorId)
+	             .orElseThrow(() -> new RuntimeException("Creator not found"));
+	         
+	         creator.setActive(active);
+	         Creator updatedCreator = creatorRepository.save(creator);
+	         
+	         return ResponseEntity.ok(updatedCreator);
+	     } catch (Exception e) {
+	         return ResponseEntity.badRequest().build();
+	     }
+	 }
+}
 

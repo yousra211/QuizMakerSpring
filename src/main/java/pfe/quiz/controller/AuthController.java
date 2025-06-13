@@ -49,9 +49,21 @@ public class AuthController {
 	        if (creator == null || !passwordEncoder.matches(request.getPassword(), creator.getPassword())) {
 	            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Email ou mot de passe invalide");
 	        }
-	        creator.setUsername(creator.getUsername());
+	        
+	     // Add this check for active status
+	        if (!creator.isActive()) { // or creator.getActive() if you're using getActive()
+	            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Votre compte est temporairement désactivé. Veuillez contacter l'administrateur à : admin@admin.com");
+	        }
+	    // Create response with roles
+	        Map<String, Object> response = new HashMap<>();
+	        response.put("id", creator.getId());
+	        response.put("fullname", creator.getFullname());
+	        response.put("email", creator.getEmail());
+	        response.put("roles", creator.getRoles()); // This will return "ROLE_CREATOR" or "ROLE_ADMIN"
+	        
 	        return ResponseEntity.ok(creator); 
 	    }
+	    
 
 	    
 	    //signup
@@ -65,5 +77,13 @@ public class AuthController {
 	        
 	        return ResponseEntity.ok(savedCreator); 
 	    }
+	    
+	    @PostMapping("/auth/register-admin")
+	    public ResponseEntity<?> registerAdmin(@RequestBody Creator creator) {
+	        creator.setRoles("ROLE_ADMIN");
+	        return ResponseEntity.ok(creatorService.registerNewCreator(creator));
+	    }
+
+	    
 	}
 
