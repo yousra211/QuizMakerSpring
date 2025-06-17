@@ -21,16 +21,12 @@ public class Participant {
 	@Id
 	  @GeneratedValue(strategy = GenerationType.IDENTITY)
 	Long id ;
-	String fullName;
+	String email;
+	String fullname;
 	String CIN ;
-	@ManyToMany
-	 @JoinTable(
-		        name = "participant_answers",
-		        joinColumns = @JoinColumn(name = "participant_id"),
-		        inverseJoinColumns = @JoinColumn(name = "answer_id")
-		    )
+	@OneToMany(mappedBy= "participant")
 	List<Answer> answers;
 	
-	
+	 Double totalScore; 
 }
 
