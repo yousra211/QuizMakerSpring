@@ -30,4 +30,18 @@ public class AnswerService {
 		answerRepository.deleteById(id);
 	}
 
+	 public List<Answer> saveAll(List<Answer> answers) {
+        return answerRepository.saveAll(answers);
+    }
+	 // 🔍 NOUVELLES MÉTHODES POUR DIAGNOSTIC
+	    public long countByParticipantId(Long participantId) {
+	        return answerRepository.countByParticipantId(participantId);
+	    }
+	    
+	    public List<Answer> findByParticipantId(Long participantId) {
+	        return answerRepository.findByParticipantId(participantId);
+	    }
+	 //public Double calculateTotalScore(Long participantId) {
+		//    return answerRepository.calculateTotalScore(participantId);
+		//}
 }

@@ -2,7 +2,11 @@ package pfe.quiz.model;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -24,7 +28,8 @@ public class Participant {
 	String email;
 	String fullname;
 	String CIN ;
-	@OneToMany(mappedBy= "participant")
+	@OneToMany(mappedBy= "participant",fetch = FetchType.LAZY)
+	@JsonIgnore
 	List<Answer> answers;
 	
 	 Double totalScore; 

@@ -2,6 +2,11 @@ package pfe.quiz.model;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -23,15 +28,22 @@ public class Answer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 	Long id;
 	String text;
+	@Column(name = "is_correct")
 	Boolean isCorrect;
 	
-	@ManyToOne
-	@JoinColumn(name = "question_id")  
-	Question question;
+	@ManyToOne(fetch = FetchType.LAZY)
+	 @JoinColumn(name = "question_id", nullable = false) // Assurez-vous que la colonne est bien mappée
+    @JsonIgnore // Évite la boucle infinie
+    private Question question;
 	
 	
 	 @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "participant_id")
-    
-	 Participant participant;
+	    @JoinColumn(name = "participant_id", nullable = false)
+	 @JsonIgnore
+	    private Participant participant;
+	    
+	 @JsonProperty("questionId")
+	    public Long getQuestionId() {
+	        return question != null ? question.getId() : null;
+	    }
 } 

@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -31,11 +32,11 @@ public class Exam {
 	float duration;
 	String uniqueLink;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	  @JoinColumn(name = "creator_id")
 	Creator creator;
 	@JsonIgnore
-	@OneToMany(mappedBy= "exam")
+	@OneToMany(mappedBy= "exam", fetch = FetchType.LAZY)
 	  List<Question> question;
 
 	@Override

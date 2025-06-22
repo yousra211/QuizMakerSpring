@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import pfe.quiz.Repository.AnswerRepository;
 import pfe.quiz.Repository.QuestionRepository;
 import pfe.quiz.model.Answer;
+import pfe.quiz.model.Participant;
 import pfe.quiz.model.Question;
 
 @Service
@@ -33,6 +34,10 @@ public class QuestionService {
 	public void deleteQuestionById(Long id){
 		questionRepository.deleteById(id);
 	}
+	public Optional<Question> findById(Long id){
+		return questionRepository.findById(id);
+	}
+	
 	/*
 	 public List<Answer>getAllAnswersByQuestion(Long idQuestion) {
 		    return answerRepository.findAllAnswersByQuestionId(idQuestion);

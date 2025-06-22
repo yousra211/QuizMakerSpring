@@ -38,7 +38,7 @@ public class Creator implements UserDetails {
 	 boolean active;
 	 String roles;
 	
-	@OneToMany(mappedBy = "creator", fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "creator", fetch = FetchType.LAZY)
 	@JsonIgnore
 	List<Exam> exams;
 
@@ -59,12 +59,18 @@ public class Creator implements UserDetails {
 	
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		List<GrantedAuthority> authorities=new ArrayList<>();
-		this.getRoles().forEach(role->{
-		authorities.add(new SimpleGrantedAuthority(role));
-		});
-		return authorities;
-		}
+	    List<GrantedAuthority> authorities = new ArrayList<>();
+	    
+	    if (this.roles != null && !this.roles.isEmpty()) {
+	        // Split les rôles s'ils sont séparés par des virgules
+	        String[] roleArray = this.roles.split(",");
+	        for (String role : roleArray) {
+	            authorities.add(new SimpleGrantedAuthority(role.trim()));
+	        }
+	    }
+	    return authorities;
+	}
+
 	@Override
 	public boolean isAccountNonExpired() {
 	    return active;
@@ -88,7 +94,7 @@ public class Creator implements UserDetails {
 	// Pour compatibilité avec UserDetails
 	@Override
 	public String getUsername() {
-	    return this.username; // Utiliser l'email comme identifiant
+	    return this.email; // Utiliser l'email comme identifiant
 	}
 	
 	@Override

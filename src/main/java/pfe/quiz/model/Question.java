@@ -3,6 +3,10 @@ package pfe.quiz.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -46,8 +50,15 @@ private Long id;
     @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Answer> answers = new ArrayList<>();
     */
-    
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "exam_id")
+    @JsonIgnore// Évite la boucle infinie
     private Exam exam;
+    
+    @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore // ← AJOUTEZ CETTE ANNOTATION
+    private List<Answer> answers;
 }
+
+
+

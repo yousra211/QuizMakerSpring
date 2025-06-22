@@ -82,9 +82,11 @@ private PasswordEncoder passwordEncoder;
 	    }
 	}
 	@Override
-	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-	        return creatorRepository.findByUsername(username); 
-	    }
+	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+	    return creatorRepository.findByEmail(email)
+	            .orElseThrow(() -> new UsernameNotFoundException("Utilisateur non trouvé avec l'email: " + email));
+	}
+
 	
 	
  // vérifier si un email existe déjà
