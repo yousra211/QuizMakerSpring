@@ -26,4 +26,9 @@ public interface AnswerRepository extends JpaRepository<Answer, Long> {
     // 🔍 OPTIONNEL: Pour vérifier si c'est un problème de doublons
     @Query("SELECT a FROM Answer a WHERE a.participant.id = :participantId ORDER BY a.id DESC")
     List<Answer> findByParticipantIdOrderByIdDesc(@Param("participantId") Long participantId);
+    
+// pour l,interface exam-resulrs
+    @Query("SELECT a FROM Answer a JOIN a.question q WHERE q.exam.id = :examId")
+	List<Answer> findByExamId(@Param("examId")Long examId);
+
 }

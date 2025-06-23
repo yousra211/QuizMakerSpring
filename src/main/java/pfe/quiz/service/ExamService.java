@@ -13,11 +13,14 @@ import org.springframework.web.server.ResponseStatusException;
 import pfe.quiz.model.Answer;
 import pfe.quiz.model.Creator;
 import pfe.quiz.model.Exam;
+import pfe.quiz.model.Participant;
 import pfe.quiz.model.Question;
 import pfe.quiz.Repository.ExamRepository;
 import pfe.quiz.Repository.QuestionRepository;
 import pfe.quiz.Repository.AnswerRepository;
 import pfe.quiz.Repository.CreatorRepository;
+import pfe.quiz.Repository.ParticipantRepository;
+
 
 @Service
 public class ExamService {
@@ -26,6 +29,8 @@ public class ExamService {
 @Autowired CreatorRepository creatorRepository;
 @Autowired QuestionRepository questionRepository;
 @Autowired AnswerRepository answerRepository;	
+@Autowired ParticipantRepository ParticipantRepository;	
+
 
 	public List<Exam>getAllExams() {
 		return examRepository.findAll();
@@ -93,6 +98,25 @@ public class ExamService {
 		    }
 		    
 		    return savedQuestions;
+		}
+	 
+	 public List<Participant>getResultsForExam(Long examId) {
+		    List<Participant>allParticipants=ParticipantRepository.findAll();
+
+		    return allParticipants.stream()
+		        .filter(p -> p.getAnswers().stream().anyMatch(a ->
+		            a.getQuestion() != null &&
+		            a.getQuestion().getExam() != null &&
+		            a.getQuestion().getExam().getId().equals(examId)))
+		        .peek(p -> {
+		            double score = p.getAnswers().stream()
+		                .filter(a -> a.getQuestion().getExam().getId().equals(examId))
+		                .filter(a -> Boolean.TRUE.equals(a.getIsCorrect()))
+		                .mapToDouble(a -> a.getQuestion().getGrade())
+		                .sum();
+		            p.setTotalScore(score);
+		        })
+		      .toList();
 		}
 	
 	

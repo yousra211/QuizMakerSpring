@@ -1,6 +1,7 @@
 package pfe.quiz.controller;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import pfe.quiz.model.Creator;
 import pfe.quiz.model.Exam;
+import pfe.quiz.model.Participant;
 import pfe.quiz.model.Question;
 import pfe.quiz.service.ExamService;
 
@@ -72,4 +74,17 @@ public class ExamController {
 	     Creator creator = (Creator) authentication.getPrincipal();
 	     return examService.addQuestionsToExam(creator.getId(), questions, id);
 	 }
+	 
+	 
+	 @GetMapping("/{id}/results")
+	 public ResponseEntity<?> getResultsForExam(@PathVariable Long id) {
+	     try {
+	         List<Participant> results = examService.getResultsForExam(id);
+	         return ResponseEntity.ok(results);
+	     } catch (Exception e) {
+	         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+	                              .body(Map.of("error", "Could not load results"));
+	     }
+	 }
+	
 }
